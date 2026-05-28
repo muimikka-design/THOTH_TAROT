@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>托特塔羅牌 - 線上抽牌系統</title>
+    <style>
+        body {
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #2c3e50; 
+            color: #ecf0f1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 0;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #f1c40f;
+            margin-bottom: 20px;
+        }
+
+        /* 分頁按鈕樣式 */
+        .tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            background-color: #34495e;
+            padding: 10px;
+            border-radius: 30px;
+        }
+
+        .tab-btn {
+            background-color: transparent;
+            box-shadow: none;
+            color: #bdc3c7;
+            padding: 10px 20px;
+            margin: 0;
+        }
+
+        .tab-btn.active {
+            background-color: #d35400;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* 分頁內容容器 */
+        .tab-content {
+            display: none; /* 預設隱藏所有分頁 */
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: flex; /* 只顯示有 active class 的分頁 */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .description {
+            color: #bdc3c7;
+            font-size: 1.2em;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        /* 牌陣版面配置 */
+        .spread-board {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px; 
+            margin-bottom: 30px;
+        }
+
+        .card-row {
+            display: flex;
+            gap: 20px; 
+            justify-content: center;
+        }
+
+        .card-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .position-label {
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #bdc3c7;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        .card-name {
+            margin-top: 10px;
+            font-size: 15px;
+            color: #f1c40f;
+            min-height: 20px;
+            font-weight: bold;
+        }
+
+        /* 卡牌容器與 3D 透視 */
+        .card-container {
+            width: 140px; 
+            height: 220px;
+            perspective: 1000px;
+        }
+
+        .card-container.large {
+            width: 200px; /* Yes/No 單張牌稍微放大 */
+            height: 314px;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden; 
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            border: 2px solid #d35400; 
+        }
+
+        .card-back {
+            background-image: url('images/card_back.jpg'); 
+            background-size: cover;
+            background-position: center;
+        }
+
+        .card-front {
+            transform: rotateY(180deg);
+            background-color: #000;
+        }
+
+        .card-front img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            transition: transform 0.3s;
+        }
+
+        /* 逆位翻轉效果 */
+        .is-reversed {
+            transform: rotate(180deg);
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 18px;
+            background-color: #d35400;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+
+        button:hover {
+            background-color: #e67e22;
+        }
+
+        /* 問題輸入區塊樣式 */
+        .question-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column; /* 改為垂直排列，讓按鈕掉到下一行 */
+            align-items: flex-end;    /* center: 讓文字框與按鈕都保持置中 or flex-end:靠右對齊文字框的邊緣*/
+            gap: 15px;              /* 設定文字框與按鈕之間的上下間距 */
+            margin-bottom: 15px;
+        }
+
+        /* 針對 Textarea 的專屬設定 */
+        textarea {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 15px; /* 稍微縮小圓角讓多行文字框更好看 */
+            border: 2px solid #34495e;
+            background-color: #1a252f;
+            color: #ecf0f1;
+            width: 300px;
+            outline: none;
+            font-family: inherit;
+            transition: border-color 0.3s;
+            resize: none; /* 鎖定大小，防止使用者把框框拉得太大破壞版面 */
+            line-height: 1.5; /* 讓行距稍微寬鬆一點，閱讀起來更舒服 */
+        }
+
+        textarea:focus {
+            border-color: #d35400; /* 點擊輸入時邊框會亮起橘色 */
+        }
+
+        button.clear-btn {
+            background-color: #7f8c8d;
+            margin-bottom: 0;
+            padding: 6px 15px; /* 原本是 10px 20px，把上下左右的內縮空間改小 */
+            font-size: 14px;   /* 原本是 16px，把裡面的字體改小一點 */
+            height: fit-content;  /* 讓按鈕維持原本的高度 */
+        }
+
+
+        button.clear-btn:hover {
+            background-color: #95a5a6;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>托特塔羅牌</h1>
+
+    <!-- 分頁導覽列 -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('tab-131', this)">1+3+1 牌陣</button>
+        <button class="tab-btn" onclick="switchTab('tab-yesno', this)">Yes or No</button>
+    </div>
+
+    <!-- ================= 分頁 1: 1+3+1 牌陣 ================= -->
+    <div id="tab-131" class="tab-content active">
+        
+        <div class="question-section">
+            <div class="description">深呼吸，並寫下你想詢問的問題</div>
+            <div class="input-group">
+                <textarea id="user-question-131" rows="3" placeholder="請在此輸入你的問題..."></textarea>
+                <button class="clear-btn" onclick="clearQuestion('user-question-131')">Clear</button>
+            </div>
+        </div>
+
+        <button onclick="drawSpread()">抽出 5 張牌</button>
+        
+        <div class="spread-board">
+            <div class="card-row">
+                <div class="card-wrapper">
+                    <div class="card-container"><div class="card" id="card-0"><div class="card-face card-back"></div><div class="card-face card-front"><img id="img-0" src=""></div></div></div>
+                    <div class="position-label">當下切牌</div>
+                    <div class="card-name" id="name-0"></div>
+                </div>
+            </div>
+            <div class="card-row">
+                <div class="card-wrapper">
+                    <div class="card-container"><div class="card" id="card-1"><div class="card-face card-back"></div><div class="card-face card-front"><img id="img-1" src=""></div></div></div>
+                    <div class="position-label">敘事 I</div>
+                    <div class="card-name" id="name-1"></div>
+                </div>
+                <div class="card-wrapper">
+                    <div class="card-container"><div class="card" id="card-2"><div class="card-face card-back"></div><div class="card-face card-front"><img id="img-2" src=""></div></div></div>
+                    <div class="position-label">敘事 II</div>
+                    <div class="card-name" id="name-2"></div>
+                </div>
+                <div class="card-wrapper">
+                    <div class="card-container"><div class="card" id="card-3"><div class="card-face card-back"></div><div class="card-face card-front"><img id="img-3" src=""></div></div></div>
+                    <div class="position-label">敘事 III</div>
+                    <div class="card-name" id="name-3"></div>
+                </div>
+            </div>
+            <div class="card-row">
+                <div class="card-wrapper">
+                    <div class="card-container"><div class="card" id="card-4"><div class="card-face card-back"></div><div class="card-face card-front"><img id="img-4" src=""></div></div></div>
+                    <div class="position-label">行動建議</div>
+                    <div class="card-name" id="name-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- ================= 分頁 2: Yes or No ================= -->
+    <div id="tab-yesno" class="tab-content">
+        <h2>Yes or No</h2>
+        <div class="description">深呼吸，想好一個具體明確的要或不要的問題</div>
+        
+        <button onclick="drawYesNo()">抽一張牌</button>
+
+        <div class="card-wrapper">
+            <div class="card-container large">
+                <div class="card" id="yn-card">
+                    <div class="card-face card-back"></div>
+                    <div class="card-face card-front">
+                        <img id="yn-img" src="" alt="Tarot Card">
+                    </div>
+                </div>
+            </div>
+            <div class="card-name" id="yn-name" style="font-size: 1.2em; margin-top: 20px;"></div>
+        </div>
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
