@@ -1,4 +1,16 @@
 
+// 註冊 Service Worker (PWA 核心)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('PWA ServiceWorker 註冊成功！', registration.scope);
+                    })
+                    .catch(err => {
+                        console.log('PWA ServiceWorker 註冊失敗：', err);
+                    });
+            });
+        }
 // 牌庫資料 
 const deck = [
     // ================= 大阿爾克那 (Major Arcana) =================
