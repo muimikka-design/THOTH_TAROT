@@ -81,7 +81,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 30px; 
+            gap: 5px; /* 🔮 原本應該是 30px，請把它改小（例如 5px 或 10px） */
             margin-bottom: 30px;
         }
 
@@ -215,7 +215,7 @@
             border: 2px solid #34495e;
             background-color: #1a252f;
             color: #ecf0f1;
-            width: 250px; /* 🔮 原本是 450px，大約縮小一半 */
+            width: 200px; /* 🔮 原本是 450px，大約縮小一半 */
             height: 120px; /* 🔮 新增高度，讓文字框變高，方便寫較長的問題 */
             outline: none;
             font-family: inherit;
@@ -252,7 +252,7 @@
         }
         /* 讓第一排左右兩張牌單獨往下移動 */
         .top-section .card-wrapper {
-            margin-top: 70px; /* 🔮 調整這個數字：數字越大，牌掉得越下面 */
+            margin-top: 150px; /* 🔮 調整這個數字：數字越大，牌掉得越下面 */
         }
 
         .center-controls {
@@ -266,8 +266,8 @@
             display: flex;
             flex-direction: row;
             justify-content: center;
-            gap: 20px;
-            margin-top: 10px;
+            gap: 25px;
+            margin-top: 5px;
         }
 
         /* 新增：抽牌與洗牌按鈕併排同一列的樣式 */
@@ -280,7 +280,9 @@
         }
 
         .action-buttons-row button {
-            width: 120px;       /* 稍微縮小寬度以利併排 */
+            width: 90px;       /* 🔮 原本是 120px，把它改小 (例如 90px 或 100px) */
+            padding: 10px 15px; /* 🔮 (可選) 稍微縮小按鈕上下的內邊距，讓它整體更精緻 */
+            font-size: 18px;    /* 🔮 (可選) 字體稍微縮小一點點，配合變小的按鈕 */
             margin-bottom: 0;
         }
 
