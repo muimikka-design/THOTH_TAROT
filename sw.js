@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tarot-pwa-v3'; // 更新版本號
+const CACHE_NAME = 'tarot-pwa-v4'; // 更新版本號
 
 // 1. 安裝時快取基本檔案
 self.addEventListener('install', event => {

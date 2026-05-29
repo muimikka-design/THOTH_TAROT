@@ -57,7 +57,7 @@ const deck = [
     { id: 36, name: "聖杯騎士 (Knight of Cups)", image: "images/cups_knight.jpg" },
     { id: 37, name: "聖杯王后 (Queen of Cups)", image: "images/cups_queen.jpg" },
     { id: 38, name: "聖杯王子 (Prince of Cups)", image: "images/cups_prince.jpg" },
-    { id: 39, name: "聖杯公主 (Princess of Cups)", image: "images/c.jpg" },
+    { id: 39, name: "聖杯公主 (Princess of Cups)", image: "images/cups_princess.jpg" },
     { id: 40, name: "聖杯一 (Ace of Cups)", image: "images/cups_1.jpg" },
     { id: 41, name: "聖杯二 (2 of Cups)", image: "images/cups_2.jpg" },
     { id: 42, name: "聖杯三 (3 of Cups)", image: "images/cups_3.jpg" },
@@ -185,23 +185,7 @@ function clearQuestion(inputId) {
     document.getElementById(inputId).value = '';
 }
 
-// ================= 新增：洗牌功能 =================
 
-// 洗牌：1+3+1 牌陣
-function shuffleSpread() {
-    for (let i = 0; i < 5; i++) {
-        const cardInner = document.getElementById(`card-${i}`);
-        const cardName = document.getElementById(`name-${i}`);
-        
-        // 移除翻轉 class，讓牌蓋回背面
-        cardInner.classList.remove('flipped');
-        
-        // 延遲 400 毫秒（等翻回背面的動畫跑完）後再清空文字，視覺上會比較自然
-        setTimeout(() => {
-            cardName.innerText = "";
-        }, 400);
-    }
-}
 
 // ================= 新增：洗牌功能 =================
 
