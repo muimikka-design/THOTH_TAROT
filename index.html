@@ -306,22 +306,24 @@
                 padding: 15px 0; /* 縮小網頁上下邊距 */
             }
 
-            /* 讓上半部的卡牌與控制區改為垂直排列，避免橫向爆出 */
+            /* 讓上半部改為「橫向排列 + 自動折行」 */
             .top-section {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            /* 手機畫面上，左右兩張牌可以並排在控制區的上方或下方，這裡讓它們稍微緊湊 */
-            /* 新增這一段：在手機版時，取消左右兩張牌的往下推擠 */
-            .top-section .card-wrapper {
-                margin-top: 0; 
-                order: 2; /* 這是你原本就有的 */
+                flex-direction: row; /* 🔮 改回橫向排列 */
+                flex-wrap: wrap;     /* 🔮 允許內容擠不下時換行 */
+                justify-content: center;
+                gap: 20px;           /* 🔮 控制下方左右兩張牌的間距 */
             }
 
             .center-controls {
-                order: 1; /* 讓輸入框維持在手機最上方，方便打字 */
-                width: 90%;
+                order: 1;            /* 排在第一順位 */
+                width: 100%;         /* 🔮 讓控制區佔滿 100% 寬度，強迫後面的卡牌掉到下一行 */
+                margin-bottom: 10px;
+            }
+
+            /* 手機版：取消往下推擠，讓卡牌自然排在第二順位 */
+            .top-section .card-wrapper {
+                margin-top: 0; 
+                order: 2;            /* 掉到下一行後，因為外層是 row，它們就會自動左右並排了！ */
             }
 
             /* 將輸入框寬度調小，適應手機螢幕，不超出邊界 */
