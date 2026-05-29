@@ -185,3 +185,50 @@ function clearQuestion(inputId) {
     document.getElementById(inputId).value = '';
 }
 
+// ================= 新增：洗牌功能 =================
+
+// 洗牌：1+3+1 牌陣
+function shuffleSpread() {
+    for (let i = 0; i < 5; i++) {
+        const cardInner = document.getElementById(`card-${i}`);
+        const cardName = document.getElementById(`name-${i}`);
+        
+        // 移除翻轉 class，讓牌蓋回背面
+        cardInner.classList.remove('flipped');
+        
+        // 延遲 400 毫秒（等翻回背面的動畫跑完）後再清空文字，視覺上會比較自然
+        setTimeout(() => {
+            cardName.innerText = "";
+        }, 400);
+    }
+}
+
+// ================= 新增：洗牌功能 =================
+
+// 洗牌：1+3+1 牌陣
+function shuffleSpread() {
+    for (let i = 0; i < 5; i++) {
+        const cardInner = document.getElementById(`card-${i}`);
+        const cardName = document.getElementById(`name-${i}`);
+        
+        // 移除翻轉 class，讓牌蓋回背面
+        cardInner.classList.remove('flipped');
+        
+        // 延遲 400 毫秒（等翻回背面的動畫跑完）後再清空文字，視覺上會比較自然
+        setTimeout(() => {
+            cardName.innerText = "";
+        }, 400);
+    }
+}
+
+// 洗牌：Yes or No 單張牌
+function shuffleYesNo() {
+    const cardInner = document.getElementById('yn-card');
+    const cardName = document.getElementById('yn-name');
+
+    cardInner.classList.remove('flipped');
+    
+    setTimeout(() => {
+        cardName.innerText = "";
+    }, 400);
+}
